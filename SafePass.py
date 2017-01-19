@@ -91,11 +91,6 @@ def check(x,y):
 #read = Läser en rad och anpassas vilken rad av 'lines'
 #char = En bokstav i varje rad
 
-
-            
-    
-            
-            
             
 
 #Ska göra så om att ett nummer högre än 52 tas bort 52 från talet, och lägre än 0 adderas med 52
