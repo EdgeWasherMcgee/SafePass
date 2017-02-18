@@ -96,7 +96,6 @@ class SafePassCode():
         
 
     
-   
 
 
 
@@ -117,7 +116,6 @@ def check(x):
 
 
             
-    
             
             
             
