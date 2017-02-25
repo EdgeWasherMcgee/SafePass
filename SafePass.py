@@ -1,11 +1,12 @@
 
 # -*- coding: iso-8859-15 -*-
 class SafePassCode():
-    def login():
+    def login(self):
+	b = False
         while b == False:
-            a = input("Here you have to enter the correct masterkey, if you don't already have one you can choose one you want to have as a masterkey.\nIf you want to know more, don't type anything and press enter")
+            a = input("Here you have to enter the correct masterkey, if you don't already have one you can choose one you want to have as a masterkey.\nIf you want to know more, don't type anything and press enter\n")
             if a == '':
-                print("To make sure your password is safely saved, you have to enter the correct password or else you won't be able to access the right passwords\n When you are typing the password in you have to be carefull so that you don't misspell anything.") 
+                print("To make sure your password is safely saved, you have to enter the correct password or else you won't be able to access the right passwords.\nWhen you are typing the password in you have to be carefull so that you don't misspell anything.") 
             elif len(a) < 4:
                 print("Your password has to be atleast 4 characters long")
             else:
@@ -15,7 +16,7 @@ class SafePassCode():
 
 
 
-    def keySafe(password):
+    def keySafe(self,password):
         y = ''
         print("Here you can save your passwords and view those that you already have:")
         a = check("Password.txt")
@@ -29,13 +30,13 @@ class SafePassCode():
 
 
 
-    def UserName_Saving(username):
+    def UserName_Saving(self,username):
         f = open("Usernames.txt", "a+")
         f.write('[' + str(check("Usernames.txt", "a+"))+ ']' + username + "\n")
         f.close
 
 
-    def pairing(place):
+    def pairing(self,place):
         fU = open("Usernames.txt","r")
         fP = open("Password.txt","r")
         lineU = fU.readlines()
@@ -48,7 +49,7 @@ class SafePassCode():
         
 
 
-    def Encryption_Method(password, login_pass):
+    def Encryption_Method(self,password, login_pass):
         answer = ''
         open_file = open('Password.txt','a+')
         aSCII_List = []
@@ -66,7 +67,7 @@ class SafePassCode():
 
 
 
-    def unpack(line):
+    def unpack(self,line):
         x = 0
         chars = []
         for char in line:
@@ -77,7 +78,7 @@ class SafePassCode():
 
 
 
-    def New_Encrypting(password, login_pass):
+    def New_Encrypting(self,password, login_pass):
         crypted = []
         ordered = []
         ordLogin = []
@@ -103,7 +104,7 @@ class SafePassCode():
 
 
 
-def check(x):
+def check(self,x):
     f = open(x, "r")
     count = len(f.readlines())
     f.close()
@@ -122,7 +123,7 @@ def check(x):
 
 #Ska göra så om att ett nummer högre än 52 tas bort 52 från talet, och lägre än 0 adderas med 52
 #Ex: 56 blir till 4, -3 blir 49
-def rot(num, direction):
+def rot(self,num, direction):
     num = num / 52
     num = num - int(num)
     num = num * 52
@@ -133,7 +134,7 @@ def rot(num, direction):
         
     
         
-def to_52_char(num):
+def to_52_char(self,num):
     if num < 27:
         answer = num + 96
         answer = (answer)
@@ -141,7 +142,7 @@ def to_52_char(num):
         answer = num + 65 - 27
     return chr(answer)
 
-def to_52_ord(char):
+def to_52_ord(self,char):
     num = ord(char)
     if num > 90:
         num = num - 96
@@ -149,7 +150,7 @@ def to_52_ord(char):
         num = num - 65 + 27
     return num
 
-def Decryption_Method(password ,login_password):
+def Decryption_Method(self,password ,login_password):
     ordered = []
     ordLogin = []
     crypted = []
