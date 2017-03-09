@@ -8,6 +8,7 @@ class SafePassCode():
                     print("\n\n\nHere you have to enter your masterkey\n\nIf you don't already have one you can choose the one you want to have")
                     print("Type your masterkey and press enter, if you want to know more, leave the feild open and press enter")
                     a = getpass.getpass()
+                    self.password = a
                     print("\n\n\n")
                     if a == '':
                         print("To make sure your password is safely saved, you have to enter the correct password or else you won't be able to access the right passwords.\nWhen you are typing the password in you have to be carefull so that you don't misspell anything.") 
@@ -15,34 +16,38 @@ class SafePassCode():
                         print("Your password has to be atleast 4 characters long")
                     else:
                         b = False
-                self.keySafe(a)
+                print("\033c")
+                self.keySafe()
 
-        def keySafe(self, login_pass):
-                y = ''
-                a = self.check("Password.txt")
-                y = self.unpack_U()
-                print("Here's your saved passwords:\n%s" % y)
-                c = input("Here's a list of things you can do, type the following things to execute the commands:\n\n0-9 = View one of you passwords\n\nn = create a new password\n\nd + [number] = delete a password\n\n")
-                elif c in ('0','1','2','3','4','5','6','7','8','9'):
-                        decrypted = self.Decryption_Method(self.unpack(int(c)), login_pass)
-                        d = ''
-                        for x in decrypted:
-                                d = d + x
-                        print('Decrypted password:\n%s \n\n\n' % d)
-                        self.keySafe(login_pass)
-                elif c == 'n':
-                        new_name = input('Type the name you want your password to have:\n')
-                        new_pass = getpass.getpass('Type the password you want to save:\n')
-                        self.Encryption_Method(new_pass, login_pass)
-                        print("Now your password has been encrypted and saved!\n\n\n\n")
-                        self.UserName_Saving(new_name)
-                        self.keySafe(login_pass)
-                elif c[0] == 'd':
-                        self.delete(c[1])
-                        self.keySafe(login_pass)
-                elif c == '':
-                        print('End')
-        #       elif c[0] == d:
+        def keySafe(self):
+                cont = True
+                while cont:
+                        y = ''
+                        a = self.check("Password.txt")
+                        y = self.unpack_U()
+                        print("Here's your saved passwords:\n%s" % y)
+                        c = input("Here's a list of things you can do, type the following things to execute the commands:\n\n0-9 = View one of you passwords\n\nn = create a new password\n\nd + [number] = delete a password\n\n")
+                        print("\033c")
+                        if c == '':
+                                cont = False
+                        elif c in ('0','1','2','3','4','5','6','7','8','9'):
+                                if int(c) < self.check('Usernames.txt'):
+                                        decrypted = self.Decryption_Method(self.unpack(int(c)))
+                                        d = ''
+                                        for x in decrypted:
+                                                d = d + x
+                                        print('Decrypted password:\n%s \n\n\n' % d)
+                                else:
+                                        print('%s is not a valid number\n\n\n' % c)
+                        elif c == 'n':
+                                new_name = input('Type the name you want your password to have:\n')
+                                new_pass = getpass.getpass('Type the password you want to save:\n')
+                                self.Encryption_Method(new_pass)
+                                print("Now your password has been encrypted and saved!\n\n\n\n")
+                                self.UserName_Saving(new_name)
+                        elif (c[1] in ('0','1','2','3','4','5','6','7','8','9')) and (c[0] == 'd'):
+                                if int(c[1]) < self.check('Usernames.txt'):
+                                        self.delete(c[1])
 
 
 
@@ -75,14 +80,14 @@ class SafePassCode():
                 f.close
 
 
-        def Encryption_Method(self,password, login_pass):
+        def Encryption_Method(self,password):
                 answer = ''
                 open_file = open('Password.txt','a+')
                 aSCII_List = []
                 #Konvertera alla till siffror
                 #Kor alla genom xor and 
                 encrypted = []
-                encrypted = self.new_Encrypting(password, login_pass)
+                encrypted = self.new_Encrypting(password)
                 for place in range(len(encrypted)):
                     answer = answer + (encrypted[place])
                 answer = answer + '\n'
@@ -117,13 +122,13 @@ class SafePassCode():
                 return(d)       
 
 
-        def new_Encrypting(self, password, login_pass):
+        def new_Encrypting(self, password):
                 crypted = []
                 ordered = []
                 ordLogin = []
                 for char in password:
                     ordered.append(self.to_52_ord(char))
-                for char in login_pass:
+                for char in self.password:
                     ordLogin.append(self.to_52_ord(char))
                 for spot in range(len(ordered)):
                     ordered[spot] = ordered[spot] + ordLogin[spot % len(ordLogin)]
@@ -181,13 +186,13 @@ class SafePassCode():
                 num = num - 65 + 27
             return num
 
-        def Decryption_Method(self, password,  login_password):
+        def Decryption_Method(self, password):
             ordered = []
             ordLogin = []
             crypted = []
             for char in password:
                 ordered.append(self.to_52_ord(char))
-            for char2 in login_password:
+            for char2 in self.password:
                 ordLogin.append( self.to_52_ord( char2 )  )
             for spot in range(len(ordered)):
                 ordered[spot] = ordered[spot] - ordLogin[spot % len(ordLogin)]
@@ -198,4 +203,4 @@ class SafePassCode():
 
 o = SafePassCode()
 
-# vím: tabexpand
+# vim: set tabexpand
