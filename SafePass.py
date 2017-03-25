@@ -1,6 +1,7 @@
 
 # -*- coding: iso-8859-15 -*-
 import getpass
+import clipboard
 class SafePassCode():
         def login(self):
                 b = True
@@ -30,13 +31,22 @@ class SafePassCode():
                         print("\033c")
                         if c == '':
                                 cont = False
-                        elif c in ('0','1','2','3','4','5','6','7','8','9'):
+                        elif c[0] in ('0','1','2','3','4','5','6','7','8','9'):
                                 if int(c) < self.check('Usernames.txt'):
                                         decrypted = self.Decryption_Method(self.unpack(int(c)))
                                         d = ''
                                         for x in decrypted:
                                                 d = d + x
                                         print('Decrypted password:\n%s \n\n\n' % d)
+                                        u = True
+                                        while u:
+                                                clip = input('Do you want to copy your password? N/y\n')
+                                                if clip.lower() == 'y':
+                                                        clipboard.copy(d)
+                                                        u = False
+                                                else:
+                                                        u = False
+                                        print('\033c')
                                 else:
                                         print('%s is not a valid number\n\n\n' % c)
                         elif c == 'n':
@@ -45,9 +55,9 @@ class SafePassCode():
                                 self.Encryption_Method(new_pass)
                                 print("Now your password has been encrypted and saved!\n\n\n\n")
                                 self.UserName_Saving(new_name)
-                        elif (c[1] in ('0','1','2','3','4','5','6','7','8','9')) and (c[0] == 'd'):
-                                if int(c[1]) < self.check('Usernames.txt'):
-                                        self.delete(c[1])
+                        elif (c[1:] in ('0','1','2','3','4','5','6','7','8','9')) and (c[0] == 'd'):
+                                if int(c[1:]) < self.check('Usernames.txt'):
+                                        self.delete(int(c[1:]))
 
 
 
@@ -122,20 +132,39 @@ class SafePassCode():
                 return(d)       
 
 
+        
+
         def new_Encrypting(self, password):
-                crypted = []
-                ordered = []
-                ordLogin = []
-                for char in password:
-                    ordered.append(self.to_52_ord(char))
-                for char in self.password:
-                    ordLogin.append(self.to_52_ord(char))
-                for spot in range(len(ordered)):
-                    ordered[spot] = ordered[spot] + ordLogin[spot % len(ordLogin)]
-                    Temp = self.rot(ordered[spot])
-                    Temp = self.to_52_char(Temp)
-                    crypted.append(Temp)
-                return crypted
+            ordered = []
+            ordLogin = []
+            crypted = []
+            for char in password:
+                ordered.append(self.to_126_ord(char))
+            for char2 in self.password:
+                ordLogin.append(self.to_126_ord(char2))
+            for spot in range(len(ordered)):
+                ordered[spot] = ordered[spot] + ordLogin[spot % len(ordLogin)]
+                Temp = self.rot(ordered[spot])
+                Temp = self.to_126_char(Temp)
+                crypted.append(Temp)
+            return crypted
+
+
+        #def new_Encrypting(self, password):
+         #       crypted = []
+          #      ordered = []
+           #     ordLogin = []
+            #    for char in password:
+             #       ordered.append(ord(char))
+              #  for char in self.password:
+               #     ordLogin.append(ord(char))
+                #for spot in range(len(ordered)):
+               #     ordered[spot] = ordered[spot] + ordLogin[spot % len(ordLogin)]
+               #     print(str(Temp) + str(chr(Temp)))
+               #     Temp = self.new_rot(ordered[spot])
+               #     Temp = chr(Temp)
+               #     crypted.append(Temp)
+               # return crypted
                     
 
 
@@ -167,7 +196,7 @@ class SafePassCode():
             
 
         def rot(self, num):
-                return ((num - 1) % 52) + 1
+                return ((num - 1) % 126) + 1
             
                 
         def to_52_char(self,num):
@@ -186,21 +215,43 @@ class SafePassCode():
                 num = num - 65 + 27
             return num
 
+        def to_126_ord(self, char):
+            return ord(char) - 32
+
+        def to_126_char(self, char):
+            return chr(int(char) + 32)
+            
+        def new_rot(self, num):
+            return ((int(num) - 1) % 94) + 1
+                
+
+
+        def new_rot_up(self, num):
+            a = ((int(num) - 1) % 126) + 1
+            if a < 32:
+                b = 32 - a
+                abs(b)
+                a = 192 -  b
+            return a
+         
+
+
+           
         def Decryption_Method(self, password):
             ordered = []
             ordLogin = []
             crypted = []
             for char in password:
-                ordered.append(self.to_52_ord(char))
+                ordered.append(self.to_126_ord(char))
             for char2 in self.password:
-                ordLogin.append( self.to_52_ord( char2 )  )
+                ordLogin.append( self.to_126_ord( char2 )  )
             for spot in range(len(ordered)):
                 ordered[spot] = ordered[spot] - ordLogin[spot % len(ordLogin)]
                 Temp = self.rot(ordered[spot])
-                Temp = self.to_52_char(Temp)
+                Temp = self.to_126_char(Temp)
                 crypted.append(Temp)
             return crypted
 
 o = SafePassCode()
-
-# vim: set tabexpand
+o.login()
+# vim: set expandtab
